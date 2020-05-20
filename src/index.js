@@ -38,7 +38,7 @@ document.addEventListener('submit', function (event) {
     event.preventDefault()
     //purely form bc we are submitting the form
     // which has nothing to do with our previous likes url
-
+    const form = document.querySelector("form")
     fetch(urlPurelyForm, {
         method: 'POST',
         headers: {
@@ -69,6 +69,8 @@ document.addEventListener('submit', function (event) {
         newQuoteLi.append(blockQuote)
         quoteList.append(newQuoteLi)
     })
+    form.reset()
+
 
 
 
