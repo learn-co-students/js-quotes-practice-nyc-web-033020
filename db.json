@@ -51,7 +51,8 @@
       "author": "Sonia Sotomayor"
     },
     {
-      "quoteId": 2,
+      "quote": "You Have Failed This City",
+      "author": "Oliver Queen ",
       "id": 11
     }
   ],
@@ -60,6 +61,14 @@
       "id": 1,
       "quoteId": 1,
       "createdAt": 1558524356
+    },
+    {
+      "quoteId": 2,
+      "id": 2
+    },
+    {
+      "quoteId": 11,
+      "id": 3
     }
   ]
 }
