@@ -1,5 +1,6 @@
 const quotesUrl = "http://localhost:3000/quotes"
 const quotesUrlWithLikes = "http://localhost:3000/quotes?_embed=likes"
+const likesUrl = "http://localhost:3000/likes"
 const quoteListUl = document.getElementById('quote-list')
 
 
@@ -11,8 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // below two functions create li for each quote from fetch and add to DOM
 
-const addQuoteLis = (quotesArray) => {
-  
+const addQuoteLis = (quotesArray) => {  
   quotesArray.forEach(quote => {
     const quoteLi = makeQuoteLi(quote)
     quoteListUl.appendChild(quoteLi)
@@ -70,4 +70,49 @@ const addNewQuote = (formData) => {
   .then(quote => {
     quoteListUl.appendChild(makeQuoteLi(quote))
   })
+};
+
+// adding functionality to delete buttons
+
+document.addEventListener('click', (e) => {
+  
+  
+  if(e.target.className === 'btn-danger'){
+    const quoteLi = e.target.parentNode.parentNode
+    const quoteId = e.target.parentNode.parentNode.dataset.id
+
+    deleteQuoteInDb(quoteId)
+    quoteLi.remove()
+  } else if(e.target.className === 'btn-success'){
+      const likeSpan = e.target.children[0] 
+      const quoteLi = e.target.parentNode.parentNode
+      const quoteId = e.target.parentNode.parentNode.dataset.id
+      // console.log(quoteLi, quoteId)
+      addLike(quoteId)
+      let likeCount = parseInt(likeSpan.textContent, 10)
+      likeCount++
+      likeSpan.textContent = likeCount
+    }
+
+});
+
+const deleteQuoteInDb = (id) => {
+  fetch(`${quotesUrl}/${id}`, {
+    method: "DELETE"
+  })
+};
+
+const addLike = (id) => {
+  const intId = parseInt(id, 10)
+  fetch(likesUrl, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      quoteId: intId,
+      createdAt: Date.now()
+    })
+  })
+  .catch(console.log("Bad Promise!"))
 };
