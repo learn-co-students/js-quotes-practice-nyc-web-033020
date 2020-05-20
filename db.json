@@ -53,6 +53,18 @@
     {
       "quoteId": 2,
       "id": 11
+    },
+    {
+      "quote": "Hey you little fiddle!",
+      "author": "Danielle Keita",
+      "likes": [],
+      "id": 12
+    },
+    {
+      "quote": "Watch your step!",
+      "author": "Sylvia Keita",
+      "likes": [],
+      "id": 13
     }
   ],
   "likes": [
