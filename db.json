@@ -51,8 +51,21 @@
       "author": "Sonia Sotomayor"
     },
     {
-      "quoteId": 2,
+      "quote": "TestQuote",
+      "author": "TestAuthor",
+      "likes": [],
       "id": 11
+    },
+    {
+      "quote": "TestQuote2",
+      "author": "TestAuthor2",
+      "likes": [],
+      "id": 12
+    },
+    {
+      "quote": "Test3",
+      "author": "Test3",
+      "id": 13
     }
   ],
   "likes": [
@@ -60,6 +73,78 @@
       "id": 1,
       "quoteId": 1,
       "createdAt": 1558524356
+    },
+    {
+      "quoteId": 2,
+      "id": 2
+    },
+    {
+      "quoteId": 2,
+      "id": 3
+    },
+    {
+      "quoteId": 3,
+      "id": 4
+    },
+    {
+      "quoteId": 3,
+      "id": 5
+    },
+    {
+      "quoteId": 1,
+      "id": 6
+    },
+    {
+      "quoteId": 2,
+      "id": 7
+    },
+    {
+      "quoteId": 2,
+      "id": 8
+    },
+    {
+      "quoteId": 2,
+      "id": 9
+    },
+    {
+      "quoteId": 3,
+      "id": 10
+    },
+    {
+      "quoteId": 4,
+      "id": 11
+    },
+    {
+      "quoteId": 4,
+      "id": 12
+    },
+    {
+      "quoteId": 4,
+      "id": 13
+    },
+    {
+      "quoteId": 4,
+      "id": 14
+    },
+    {
+      "quoteId": 4,
+      "id": 15
+    },
+    {
+      "quoteId": 3,
+      "id": 16
+    },
+    {
+      "quoteId": 3,
+      "id": 17
+    },
+    {
+      "quoteId": 3,
+      "id": 18
+    },
+    {
+      "quoteId": 3,
+      "id": 19
     }
   ]
 }
