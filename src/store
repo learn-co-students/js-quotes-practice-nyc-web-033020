@@ -1,0 +1,107 @@
+document.addEventListener('DOMContentLoaded', () => {
+
+    const url = 'http://localhost:3000/quotes?_embed=likes'
+    const difUrl = 'http://localhost:3000/quotes'
+    const likesUrl = 'http://localhost:3000/likes'
+    const form = document.querySelector('#new-quote-form')
+    const headers = {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+    }
+
+    const getQuotes = () => {
+        fetch(url)
+            .then(resp => resp.json())
+            .then(renderQuotes)
+    }
+
+    const renderQuotes = quotes => {
+        quotes.forEach(quoteObj => {
+            const quoteList = document.querySelector('#quote-list')
+            const li = document.createElement('li')
+            li.className = 'quote-card'
+            li.innerHTML = `
+                <blockquote class="blockquote">
+                    <p class="mb-0">${quoteObj.quote}</p>
+                    <footer class="blockquote-footer">${quoteObj.author}</footer>
+                    <br>
+                    <button class='btn-success' data-id=${quoteObj.id}>Likes: <span>0</span></button>
+                    <button class='btn-danger' data-id=${quoteObj.id}>Delete</button>
+                </blockquote>`   
+
+            quoteList.appendChild(li)
+        })
+    }
+
+    //grab form, grab input values
+    //add event listener and do post request
+
+    form.addEventListener('submit', (e) => {
+        e.preventDefault()
+
+        const newQuote = form.quote.value
+        const author = form.author.value 
+
+        fetch(difUrl, {
+            method: 'POST',
+            headers: headers,
+            body: JSON.stringify({
+                quote: newQuote,
+                author: author 
+            })
+        })
+            .then(resp => resp.json())
+            .then(quote => {
+                const quoteArray = [quote]
+                renderQuotes(quoteArray)
+            })    
+
+            form.reset()     
+    })
+
+    //grab delete button by e.target and delete quote by referencing parentNode
+    //grab like button by e.target and increase likes
+    document.addEventListener('click', (e) => {
+        if(e.target.className === 'btn-danger') {
+            let id = e.target.dataset.id
+            fetch(`${difUrl}/${id}`, {
+                method: 'DELETE',
+                headers: headers
+            })
+              .then(resp => {
+                e.target.parentNode.parentNode.remove()
+              })
+        } else {
+            (e.target.className === 'btn-success')
+            // let currentLikes = e.target.querySelector('span')
+            // currentLikes.textContent = parseInt(currentLikes.textContent) + 1
+            let spanChild = e.target.children[0]
+            spanChild.textContent = parseInt(spanChild.textContent) +1 
+            // let currentLikes = parseInt(spanChild)
+            // console.log(currentLikes) 
+            // let newLikes = currentLikes + 1
+            // spanChild = newLikes    
+
+            let id = parseInt(e.target.dataset.id)
+            fetch(likesUrl, {
+                method: 'POST',
+                headers: headers,
+                body: JSON.stringify({
+                quoteId: id 
+                })
+            })
+               
+        }
+    })
+      
+
+    getQuotes()
+
+
+})
+
+
+
+
+
+
