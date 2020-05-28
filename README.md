@@ -17,7 +17,7 @@ If you already have it installed, run the server by: `$ json-server --watch db.j
 
 ## Build a simple, Event-driven, JavaScript DOM-modifying application
 
-* Populate page with quotes with a `GET` request to
+<!-- * Populate page with quotes with a `GET` request to
   `http://localhost:3000/quotes?_embed=likes`. The query string in this URL tells 
   `json-server` to include the likes for a quote in the JSON of the response. You
   should not use this query string when creating or deleting a quote.
@@ -33,7 +33,7 @@ If you already have it installed, run the server by: `$ json-server --watch db.j
         <button class='btn-danger'>Delete</button>
       </blockquote>
     </li>
-  ```
+  ``` -->
 
 * Submitting the form creates a new quote and adds it to the list of quotes
   without having to refresh the page. Pessimistic rendering is reccommended.

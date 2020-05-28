@@ -1,111 +1,95 @@
-const url = `http://localhost:3000/quotes?_embed=likes`
-const urlPurelyForm = 'http://localhost:3000/quotes'
-const quoteList = document.querySelector("#quote-list")
-let blockQuote = document.createElement("blockquote")
-let newForm = document.querySelector("#new-quote-form")
-let submitButton = document.querySelector(".btn btn-primary")
 
-fetch(url)
-    .then(response => response.json())
-    .then(data => renderQuotes(data))
 
-function renderQuotes(quoteData) {
-    quoteData.forEach(quote => {
-        let quoteLi = document.createElement("li")
-        let blockQuote = document.createElement("blockquote")
-        quoteLi.className = 'quote-card'
-        blockQuote.className = 'blockquote'
-        blockQuote.id = `${quote.id}`
+//fetch quotes
+//think of it as, get data from server and then render data somewhere
+//first that happens a list 
 
-        blockQuote.innerHTML = `
-          <p class="mb-0">${quote.quote}</p>
-          <footer class="blockquote-footer">${quote.author}</footer>
-          <br>
-          <button class='btn-success'>Likes: <span>${quote.likes.length}</span></button>
-          <button class='btn-danger'>Delete</button>
+//command + p
+// >format document
+
+function getQuotesData() {
+    fetch(`http://localhost:3000/quotes?_embed=likes`)
+        .then(response => response.json())
+        .then(quotes => {
+            renderQuotes(quotes)
+        })
+}
+
+function renderQuotes(quotes) {
+    const quotesList = document.getElementById("quote-list")
+    quotesList.innerHTML = ""
+
+    quotes.forEach(quote => {
+        quotesList.innerHTML += `
+        <li class='quote-card'>
+        <blockquote class="blockquote">
+        <p class="mb-0">${quote.quote}</p>
+        <footer class="blockquote-footer">${quote.author}</footer>
+        <br>
+        <button class='btn-success'>Likes: <span>${quote.likes.length}</span></button>
+        <button class='btn-danger'>Delete</button>
         </blockquote>
-      </li>
-        `        
-        //gives back array of likes, need the length
-        quoteLi.append(blockQuote)
-        quoteList.append(quoteLi)
+        </li>`
     })
 }
 
-//submit needs its own event listener
+function addAQuote() {
+    document.addEventListener("submit", function (event) {
+        event.preventDefault()
 
-document.addEventListener('submit', function (event) {
-    event.preventDefault()
-    //purely form bc we are submitting the form
-    // which has nothing to do with our previous likes url
-    const form = document.querySelector("form")
-    fetch(urlPurelyForm, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-            quote: event.target.quote.value,
-            author: event.target.author.value, 
-        })
-    }).then(response => response.json())
-    .then(newQuote => {
-        let newQuoteLi = document.createElement("li")
-        let blockQuote = document.createElement("blockquote")
-        newQuoteLi.className = 'quote-card'
-        blockQuote.className = 'blockquote'
-        blockQuote.id = `${newQuote.id}`
-    
-        blockQuote.innerHTML = `
-          <p class="mb-0">${newQuote.quote}</p>
-          <footer class="blockquote-footer">${newQuote.author}</footer>
-          <br>
-          <button class='btn-success'>Likes: <span>0</span></button>
-          <button class='btn-danger'>Delete</button>
-        </blockquote>
-      </li>
-        `        
-        //gives back array of likes, need the length
-        newQuoteLi.append(blockQuote)
-        quoteList.append(newQuoteLi)
-    })
-    form.reset()
+        const form = event.target
+        const quote = form.quote.value
+        const author = form.author.value
 
-
-
-
-
-
-})
-
-document.addEventListener('click', function (event) {
-    if (event.target.className === "btn-danger") {//only set id after seeing where its best to access
-        fetch(`http://localhost:3000/quotes/${event.target.parentElement.id}`, {
-            method: 'DELETE'
-        }).then(resp => resp.json())
-        .then(() => {
-            event.target.parentElement.parentElement.remove()
-        })
-        // http://localhost:3000/quotes/${e.target.parentElement.id}
-    } else if (event.target.className === 'btn-success'){
-        // changing stuff in the databsae
-        fetch('http://localhost:3000/likes', {
+        const options = {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
             },
             body: JSON.stringify({
-                //think of quote id as the unique id of the quote
-                quoteId: parseInt(event.target.parentElement.id)
-                //sending server id number
-            }),
-            //changing stuff in the dom
-        }).then(resp => resp.json())
-        .then(() => {
-            //taking the event, updating inner text
-            event.target.children[0].innerText = parseInt(event.target.children[0].innerText) + 1
-            //use children for accessibility and flexibility
-        })
-    }
+                quote: quote,
+                author: author
+            })
+        };
 
+        fetch(`http://localhost:3000/quotes?_embed=likes`, options)
+            .then(response => response.json())
+            .then(getQuotesData)
+    })
+}
+
+document.addEventListener("click", function (event) {
+    if (event.target.className === "btn-success") {
+        
+        const likeButton = event.target
+        const likeButtonSpan = likeButton.querySelector("span")       
+
+        let likeCount = parseInt(likeButtonSpan.innerHTML, 10)
+
+        likeCount++
+
+        const options = {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify({
+                quoteId: likeCount
+            })
+        };
+
+        fetch(`http://localhost:3000/likes`,options)
+        .then(response => response.json())
+        .then(() => {likeButtonSpan.innerHTML= likeCount})
+    }
 })
+
+document.addEventListener("DOMContentLoaded", function (event) {
+    getQuotesData()
+    addAQuote()
+})
+
+
+//if they ask you to refresh a page after a fetch, do the initial fetch in your DOM part of the fetch
